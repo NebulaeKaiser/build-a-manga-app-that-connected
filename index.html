@@ -2,9 +2,549 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Manga App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- Crucial for fetching MangaDex cover and chapter image assets without cross-origin referrer restrictions -->
+  <meta name="referrer" content="no-referrer">
+  <title>MangaVerse - Online Manga Reader & Discovery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
 </head>
 <body>
-  <h1>Manga App Loading...</h1>
+
+  <!-- ================= App Header ================= -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand-logo" data-view-target="explore">
+        <div class="brand-icon">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <span class="brand-text">MangaVerse</span>
+        <span class="brand-badge">ONLINE</span>
+      </div>
+
+      <nav class="header-nav">
+        <div class="nav-link active" data-view-target="explore">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Explore
+        </div>
+        <div class="nav-link" data-view-target="browse">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          Browse
+        </div>
+        <div class="nav-link" data-view-target="library">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+          Library
+        </div>
+      </nav>
+    </div>
+
+    <!-- Header Search Input -->
+    <div class="header-center">
+      <div class="search-box">
+        <span class="search-icon-left">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </span>
+        <input type="text" id="header-search-input" class="search-input" placeholder="Search thousands of manga, manhwa..." autocomplete="off" />
+        <span class="search-shortcut-hint">/</span>
+        <div class="search-clear-btn" id="search-clear-btn" title="Clear">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header Right Buttons -->
+    <div class="header-right">
+      <button class="header-action-btn random-btn" id="btn-random-manga" title="Get a Random Manga">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+          <circle cx="15.5" cy="15.5" r="1.5"></circle>
+        </svg>
+        <span>Surprise Me</span>
+      </button>
+
+      <button class="header-action-btn icon-only" id="btn-open-settings" title="Settings">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= Mobile Bottom Navigation ================= -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-item active" data-view-target="explore">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      <span>Explore</span>
+    </div>
+    <div class="bottom-nav-item" data-view-target="browse">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <span>Browse</span>
+    </div>
+    <div class="bottom-nav-item" data-view-target="library">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+      </svg>
+      <span>Library</span>
+    </div>
+    <div class="bottom-nav-item" id="btn-mobile-random">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+        <circle cx="15.5" cy="15.5" r="1.5"></circle>
+      </svg>
+      <span>Random</span>
+    </div>
+  </nav>
+
+  <!-- ================= Main App Views Container ================= -->
+  <main class="app-main">
+
+    <!-- VIEW 1: EXPLORE / HOME VIEW -->
+    <section id="view-explore" class="view-section active">
+      <div class="container">
+        <!-- Hero Spotlight Carousel -->
+        <div class="hero-slider-wrap">
+          <div class="hero-slider-inner" id="hero-slider-inner">
+            <!-- Dynamic slides rendered by JS -->
+            <div style="min-height: 400px; display: flex; align-items: center; justify-content: center;">
+              <div class="spinner"></div>
+            </div>
+          </div>
+          <div class="hero-slider-nav" id="hero-slider-nav"></div>
+        </div>
+
+        <!-- Quick Category Pills -->
+        <div class="genre-pills-bar" id="genre-pills-bar">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Continue Reading Shelf (if history exists) -->
+        <div class="continue-reading-shelf" id="continue-reading-shelf" style="display: none;">
+          <div class="section-header" style="margin-bottom: 1rem;">
+            <div class="section-title-wrap">
+              <div class="section-icon">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <h2 class="section-title">Continue Reading</h2>
+            </div>
+          </div>
+          <div class="continue-grid" id="continue-reading-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Trending Manga Grid -->
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+              </svg>
+            </div>
+            <h2 class="section-title">Trending Manga</h2>
+          </div>
+          <div class="section-view-all" data-view-target="browse">
+            View All
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+        <div class="manga-grid" id="trending-manga-grid">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Top Rated Section -->
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </div>
+            <h2 class="section-title">Top Rated of All Time</h2>
+          </div>
+          <div class="section-view-all" data-view-target="browse">
+            View All
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+        <div class="manga-grid" id="top-rated-manga-grid">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Latest Chapter Updates Section -->
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-icon">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+              </svg>
+            </div>
+            <h2 class="section-title">Latest Updates</h2>
+          </div>
+          <div class="section-view-all" data-view-target="browse">
+            View All
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+        <div class="manga-grid" id="latest-updates-grid">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: BROWSE & SEARCH VIEW -->
+    <section id="view-browse" class="view-section">
+      <div class="container">
+        <!-- Search & Filter Controls Card -->
+        <div class="browse-filter-bar">
+          <div class="filter-row-primary">
+            <div style="flex: 1; min-width: 260px;">
+              <input type="text" id="browse-search-input" class="search-input" placeholder="Type title or keyword..." />
+            </div>
+
+            <div class="filter-select-group">
+              <span class="filter-label">Sort:</span>
+              <select id="browse-sort-select" class="filter-select">
+                <option value="followedCount">Most Popular</option>
+                <option value="rating">Top Rated</option>
+                <option value="latest">Latest Updated</option>
+                <option value="title">Title (A-Z)</option>
+              </select>
+            </div>
+
+            <div class="filter-select-group">
+              <span class="filter-label">Status:</span>
+              <select id="browse-status-select" class="filter-select">
+                <option value="">All Statuses</option>
+                <option value="ongoing">Ongoing</option>
+                <option value="completed">Completed</option>
+                <option value="hiatus">Hiatus</option>
+              </select>
+            </div>
+
+            <div class="filter-select-group">
+              <span class="filter-label">Target:</span>
+              <select id="browse-demographic-select" class="filter-select">
+                <option value="">All Demographics</option>
+                <option value="shounen">Shounen</option>
+                <option value="seinen">Seinen</option>
+                <option value="shoujo">Shoujo</option>
+                <option value="josei">Josei</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Tags & Genres Chips -->
+          <div class="browse-tags-grid" id="browse-tags-grid">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Search Results Count -->
+        <div class="section-header">
+          <h2 class="section-title" id="browse-results-count">Manga Catalog</h2>
+        </div>
+
+        <!-- Manga Results Grid -->
+        <div class="manga-grid" id="browse-results-grid">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Load More Pagination Button -->
+        <div style="text-align: center; margin-bottom: 3rem;">
+          <button class="btn btn-primary" id="btn-browse-load-more" style="display: none; padding: 0.8rem 2.5rem;">
+            Load More Manga
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: LIBRARY & BOOKMARKS VIEW -->
+    <section id="view-library" class="view-section">
+      <div class="container">
+        <div class="library-tabs-bar">
+          <div class="library-tab active" data-library-tab="bookmarks">
+            🔖 Bookmarks & Saved
+          </div>
+          <div class="library-tab" data-library-tab="history">
+            🕒 Reading History
+          </div>
+        </div>
+
+        <!-- Subview: Bookmarks -->
+        <div id="library-sub-bookmarks" class="library-subview">
+          <div class="manga-grid" id="library-bookmarks-grid">
+            <!-- Rendered dynamically -->
+          </div>
+          <div class="library-empty-state" id="library-bookmarks-empty" style="display: none;">
+            <div class="empty-icon">
+              <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
+            <h3 class="empty-title">Your library is empty</h3>
+            <p class="empty-sub">Bookmark your favorite manga to easily access them and track their latest chapters.</p>
+            <button class="btn btn-primary" data-view-target="browse">Browse Manga</button>
+          </div>
+        </div>
+
+        <!-- Subview: History -->
+        <div id="library-sub-history" class="library-subview" style="display: none;">
+          <div class="continue-grid" id="library-history-list">
+            <!-- Rendered dynamically -->
+          </div>
+          <div class="library-empty-state" id="library-history-empty" style="display: none;">
+            <div class="empty-icon">
+              <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <h3 class="empty-title">No reading history yet</h3>
+            <p class="empty-sub">Start reading chapters and your progress will automatically appear here.</p>
+            <button class="btn btn-primary" data-view-target="explore">Discover Manga</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= MANGA DETAIL MODAL ================= -->
+  <div class="modal-overlay" id="modal-manga-detail">
+    <div class="manga-detail-container">
+      <button class="detail-modal-close" id="detail-modal-close" title="Close Modal">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="detail-scroll-wrap" id="detail-scroll-wrap">
+        <!-- Rendered dynamically by App.openMangaDetail() -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FULLSCREEN MANGA READER ================= -->
+  <div class="reader-view" id="view-reader">
+    <!-- Floating Header -->
+    <header class="reader-header" id="reader-header">
+      <div class="reader-header-left">
+        <button class="reader-back-btn" id="reader-back-btn" title="Back to Manga">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <div class="reader-title-box">
+          <span class="reader-manga-title" id="reader-manga-title">Manga Title</span>
+          <span class="reader-chapter-title" id="reader-chapter-title">Chapter</span>
+        </div>
+      </div>
+
+      <div class="reader-header-controls">
+        <button class="reader-ctrl-btn" id="reader-btn-mode" title="Switch Reading Mode">
+          📜 Webtoon
+        </button>
+        <button class="reader-ctrl-btn" id="reader-btn-quality" title="Toggle Quality">
+          HD
+        </button>
+        <button class="reader-ctrl-btn" id="reader-btn-direction" title="Reading Direction">
+          LTR
+        </button>
+        <button class="reader-ctrl-btn" id="reader-btn-drawer" title="Chapter List">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+          Chapters
+        </button>
+        <button class="reader-ctrl-btn" id="reader-btn-fullscreen" title="Fullscreen">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <polyline points="9 21 3 21 3 15"></polyline>
+            <line x1="21" y1="3" x2="14" y2="10"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Canvas Viewport -->
+    <div class="reader-canvas-container" id="reader-canvas">
+      <!-- Pages rendered dynamically -->
+    </div>
+
+    <!-- Floating Footer -->
+    <footer class="reader-footer" id="reader-footer">
+      <button class="reader-ctrl-btn" id="reader-btn-prev">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Prev
+      </button>
+
+      <div class="reader-progress-slider">
+        <input type="range" class="page-range-input" id="reader-page-slider" min="1" max="1" value="1" />
+        <span class="page-counter-badge" id="reader-page-counter">1 / 1</span>
+      </div>
+
+      <button class="reader-ctrl-btn" id="reader-btn-next">
+        Next
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </footer>
+
+    <!-- Chapter Drawer Sidebar -->
+    <div class="chapter-drawer" id="reader-chapter-drawer">
+      <div class="drawer-header">
+        <h3 class="drawer-title">Chapters</h3>
+        <button class="reader-back-btn" id="reader-drawer-close">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="drawer-list" id="reader-drawer-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SETTINGS MODAL ================= -->
+  <div class="modal-overlay" id="modal-settings">
+    <div class="settings-modal-card">
+      <div class="settings-header">
+        <h3 style="font-size: 1.25rem; font-weight: 800;">Preferences & Settings</h3>
+        <button class="detail-modal-close" id="btn-close-settings" style="position: static;">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="settings-group">
+        <h4 class="settings-group-title">Display & Appearance</h4>
+        <div class="settings-option-row">
+          <div class="settings-option-label">
+            <span class="opt-name">Color Theme</span>
+            <span class="opt-desc">Select visual aesthetic style</span>
+          </div>
+          <select id="settings-theme-select" class="filter-select">
+            <option value="dark">Cyber Dark</option>
+            <option value="amoled">Midnight AMOLED</option>
+            <option value="light">Clean Light</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h4 class="settings-group-title">Reader Defaults</h4>
+        <div class="settings-option-row">
+          <div class="settings-option-label">
+            <span class="opt-name">Default Reading Mode</span>
+            <span class="opt-desc">Continuous Webtoon scroll or Single Page flip</span>
+          </div>
+          <select id="settings-reader-mode-select" class="filter-select">
+            <option value="webtoon">Webtoon (Continuous)</option>
+            <option value="single">Single Page</option>
+          </select>
+        </div>
+
+        <div class="settings-option-row">
+          <div class="settings-option-label">
+            <span class="opt-name">Reading Direction</span>
+            <span class="opt-desc">Left-to-Right or Right-to-Left (traditional Manga)</span>
+          </div>
+          <select id="settings-reader-direction-select" class="filter-select">
+            <option value="ltr">Left to Right (LTR)</option>
+            <option value="rtl">Right to Left (RTL)</option>
+          </select>
+        </div>
+
+        <div class="settings-option-row">
+          <div class="settings-option-label">
+            <span class="opt-name">Image Quality</span>
+            <span class="opt-desc">High Definition or Data Saver mode</span>
+          </div>
+          <select id="settings-quality-select" class="filter-select">
+            <option value="high">High Definition</option>
+            <option value="saver">Data Saver (Compressed)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h4 class="settings-group-title">Data Storage</h4>
+        <div class="settings-option-row" style="border-bottom: none;">
+          <div class="settings-option-label">
+            <span class="opt-name">Reading History</span>
+            <span class="opt-desc">Clear saved progress for all manga</span>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="settings-clear-history-btn" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">
+            Clear History
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Toast Notifications Container ================= -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- App Core JS Modules -->
+  <script type="module" src="js/app.js"></script>
+
+  <!-- Mobile bottom random trigger -->
+  <script>
+    document.getElementById('btn-mobile-random')?.addEventListener('click', () => {
+      document.getElementById('btn-random-manga')?.click();
+    });
+  </script>
 </body>
 </html>
