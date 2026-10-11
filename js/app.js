@@ -900,11 +900,7 @@ export const App = {
             </div>
             <div class="chapters-controls">
               <div class="chapters-lang-pills" id="detail-lang-pills">
-                <span class="lang-pill active" data-lang="en">EN</span>
-                <span class="lang-pill" data-lang="es">ES</span>
-                <span class="lang-pill" data-lang="pt-br">PT-BR</span>
-                <span class="lang-pill" data-lang="fr">FR</span>
-                <span class="lang-pill" data-lang="all">All</span>
+                <!-- Dynamically populated based on manga.attributes.availableTranslatedLanguages -->
               </div>
               <input type="text" class="chapter-search-box" id="detail-chap-search-input" placeholder="Search ch..." />
               <button class="btn btn-secondary btn-sm" id="detail-chap-sort-toggle">
