@@ -544,7 +544,7 @@ export const App = {
 
     card.innerHTML = `
       <div class="card-thumb-wrap">
-        <img class="card-thumb" src="${coverUrl}" alt="${title}" loading="lazy" />
+        <img class="card-thumb" src="${coverUrl}" alt="${title}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=400&q=80&auto=format&fit=crop';" />
         <div class="card-overlay-gradient"></div>
         <div class="card-badge-top">
           <span class="badge-status ${status}">${status}</span>
@@ -947,15 +947,45 @@ export const App = {
       this.showToast('App link copied to clipboard!', 'info');
     });
 
-    // Language pills
-    document.querySelectorAll('#detail-lang-pills .lang-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        document.querySelectorAll('#detail-lang-pills .lang-pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        this.detailSelectedLanguage = pill.dataset.lang;
+    // Populate and bind dynamic language pills
+    const langPillsContainer = document.getElementById('detail-lang-pills');
+    if (langPillsContainer) {
+      const rawLangs = manga.attributes?.availableTranslatedLanguages || [];
+      const hasEn = rawLangs.includes('en');
+      let langList = [...rawLangs];
+      if (langList.length === 0) langList = ['en', 'es', 'pt-br', 'fr'];
+      
+      // Select best initial language
+      this.detailSelectedLanguage = hasEn ? 'en' : (langList[0] || 'all');
+      
+      langPillsContainer.innerHTML = '';
+      langList.slice(0, 7).forEach(langCode => {
+        const pill = document.createElement('span');
+        pill.className = `lang-pill ${this.detailSelectedLanguage === langCode ? 'active' : ''}`;
+        pill.dataset.lang = langCode;
+        pill.textContent = langCode.toUpperCase();
+        pill.addEventListener('click', () => {
+          langPillsContainer.querySelectorAll('.lang-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          this.detailSelectedLanguage = langCode;
+          this.loadMangaChapters(manga.id);
+        });
+        langPillsContainer.appendChild(pill);
+      });
+
+      // Add 'All' pill
+      const allPill = document.createElement('span');
+      allPill.className = `lang-pill ${this.detailSelectedLanguage === 'all' ? 'active' : ''}`;
+      allPill.dataset.lang = 'all';
+      allPill.textContent = 'ALL';
+      allPill.addEventListener('click', () => {
+        langPillsContainer.querySelectorAll('.lang-pill').forEach(p => p.classList.remove('active'));
+        allPill.classList.add('active');
+        this.detailSelectedLanguage = 'all';
         this.loadMangaChapters(manga.id);
       });
-    });
+      langPillsContainer.appendChild(allPill);
+    }
 
     // Chapter search input
     document.getElementById('detail-chap-search-input')?.addEventListener('input', (e) => {
