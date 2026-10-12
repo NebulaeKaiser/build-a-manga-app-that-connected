@@ -28,6 +28,18 @@
       "created_at": "2026-10-11T21:08:50.277Z",
       "sender": "macOS",
       "is_cancelled": false
+    },
+    {
+      "id": "cca77c8a-0e3d-4b1f-8745-ee117cfae5b5",
+      "role": "user",
+      "content": "Create a page that list the amount of deaths and birth and show the birth rate and death rate per second in real time",
+      "status": "pending",
+      "model": "gemini-3.8-flash-high",
+      "client_type": "gemini-bridge",
+      "parent_message_id": null,
+      "created_at": "2026-10-12T18:50:03.908Z",
+      "sender": "ios",
+      "is_cancelled": false
     }
   ]
 }
